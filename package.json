@@ -5,6 +5,7 @@
   "version": "0.1.0",
   "publisher": "aggiovato",
   "license": "MIT",
+  "icon": "images/icon.png",
   "engines": {
     "vscode": "^1.90.0"
   },
@@ -52,7 +53,12 @@
       {
         "scopeName": "yrest.injection",
         "path": "./syntaxes/yrest-injection.json",
-        "injectTo": ["source.ts", "source.js", "source.tsx", "source.jsx"],
+        "injectTo": [
+          "source.ts",
+          "source.js",
+          "source.tsx",
+          "source.jsx"
+        ],
         "embeddedLanguages": {
           "meta.embedded.block.yrest": "yrest"
         }
@@ -60,12 +66,18 @@
       {
         "scopeName": "yrest.yaml.injection",
         "path": "./syntaxes/yrest-yaml-injection.json",
-        "injectTo": ["source.yaml", "source.yrest"]
+        "injectTo": [
+          "source.yaml",
+          "source.yrest"
+        ]
       },
       {
         "scopeName": "yrest.yaml.string.injection",
         "path": "./syntaxes/yrest-yaml-strings.json",
-        "injectTo": ["source.yaml", "source.yrest"]
+        "injectTo": [
+          "source.yaml",
+          "source.yrest"
+        ]
       }
     ]
   },

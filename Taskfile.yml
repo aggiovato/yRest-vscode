@@ -1,0 +1,73 @@
+version: "3"
+
+vars:
+  PUBLISHER: aggiovato
+  EXT_NAME: yrest
+
+tasks:
+  # ── Development ────────────────────────────────────────────────────────────
+
+  compile:
+    desc: Compile TypeScript
+    cmd: npm run compile
+
+  watch:
+    desc: Compile in watch mode
+    cmd: npm run watch
+
+  lint:
+    desc: Check code with ESLint
+    cmd: npm run lint
+
+  preflight:
+    desc: Full pre-push check — compile and package
+    cmds:
+      - task: compile
+      - task: package
+      - cmd: |
+          printf "\n\033[1;34m┌──────────────────────────────────────────┐\033[0m\n"
+          printf "\033[1;34m│\033[0m  \033[1;36m✦  yrest-vscode · preflight results  ✦\033[0m  \033[1;34m│\033[0m\n"
+          printf "\033[1;34m└──────────────────────────────────────────┘\033[0m\n\n"
+          printf "  \033[1;32m✓\033[0m  \033[1mcompile\033[0m   \033[2mTypeScript clean\033[0m\n"
+          printf "  \033[1;32m✓\033[0m  \033[1mpackage\033[0m   \033[2mVSIX built correctly\033[0m\n"
+          printf "\n  \033[1;32m→  All checks passed — safe to push\033[0m\n\n"
+        silent: true
+
+  # ── Package ────────────────────────────────────────────────────────────────
+
+  package:
+    desc: Build the .vsix package
+    cmd: npx vsce package --no-dependencies
+
+  install:local:
+    desc: Build and install the extension locally in VS Code
+    deps: [compile]
+    cmds:
+      - npx vsce package --no-dependencies
+      - code --install-extension {{.EXT_NAME}}-$(node -p "require('./package.json').version").vsix
+
+  # ── Release ────────────────────────────────────────────────────────────────
+
+  release:patch:
+    desc: Bump patch version (x.x.N), commit and tag
+    cmd: npm version patch
+
+  release:minor:
+    desc: Bump minor version (x.N.0), commit and tag
+    cmd: npm version minor
+
+  release:major:
+    desc: Bump major version (N.0.0), commit and tag
+    cmd: npm version major
+
+  # ── Publish ────────────────────────────────────────────────────────────────
+
+  publish:pre:
+    desc: Compile and publish as pre-release to VS Code Marketplace
+    deps: [compile]
+    cmd: npx vsce publish --pre-release
+
+  publish:
+    desc: Compile and publish stable release to VS Code Marketplace
+    deps: [compile]
+    cmd: npx vsce publish
