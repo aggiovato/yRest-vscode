@@ -1,0 +1,125 @@
+# Reconocido por extensión: *.yrest.yml
+# Ejemplo avanzado: DSL compacto, cardinalidades, _nested, _schema, _routes
+
+_schema:
+  orders:
+    status:
+      type: string
+      required: true
+    total:
+      type: number
+      required: true
+  products:
+    name:
+      type: string
+      required: true
+    price:
+      type: number
+      required: true
+    stock:
+      type: integer
+
+_rel:
+  orders:
+    userId: "m2o:users[1..1->0..n]+nested"
+    statusId: "m2o:order_statuses[1..1->0..n]"
+
+  order_items:
+    orderId: "m2o:orders[1..1->0..n]"
+    productId: "m2o:products[1..1->0..n]+nested"
+
+  products:
+    tags: "m2m:tags@product_tags(productId,tagId)[0..n->0..n]"
+
+  reviews:
+    productId:
+      _type: many2one
+      _target: products
+      _foreignKey: productId
+      _car-direct: 1..1
+      _car-inverse: 0..n
+      _nested: false
+    userId:
+      _type: many2one
+      _target: users
+      _foreignKey: userId
+      _car-direct: 1..1
+      _car-inverse: 0..n
+
+_routes:
+  - method: POST
+    path: /auth/login
+    scenarios:
+      - when:
+          body.role: admin
+        response:
+          status: 200
+          body:
+            token: "{{uuid}}"
+            role: admin
+            generatedAt: "{{now}}"
+    otherwise:
+      status: 401
+      body:
+        error: Invalid credentials
+    delay: 300
+
+  - method: GET
+    path: /orders/:id/receipt
+    response:
+      status: 200
+      body:
+        orderId: "{{params.id}}"
+        issuedAt: "{{now}}"
+
+users:
+  - id: 1
+    name: Ana García
+    email: ana@test.com
+
+order_statuses:
+  - id: 1
+    label: pending
+  - id: 2
+    label: shipped
+  - id: 3
+    label: delivered
+
+orders:
+  - id: 1
+    userId: 1
+    statusId: 2
+    total: 149.99
+
+order_items:
+  - id: 1
+    orderId: 1
+    productId: 1
+    qty: 2
+
+products:
+  - id: 1
+    name: Wireless Keyboard
+    price: 74.99
+    stock: 42
+
+tags:
+  - id: 1
+    label: electronics
+  - id: 2
+    label: accessories
+
+product_tags:
+  - id: 1
+    productId: 1
+    tagId: 1
+  - id: 2
+    productId: 1
+    tagId: 2
+
+reviews:
+  - id: 1
+    productId: 1
+    userId: 1
+    rating: 5
+    body: Excellent quality!

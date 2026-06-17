@@ -1,0 +1,35 @@
+# Reconocido por nombre de archivo: db.yml
+# Ejemplo básico con shorthand y colecciones
+
+_rel:
+  posts:
+    userId: users
+  comments:
+    postId: posts
+    userId: users
+
+users:
+  - id: 1
+    name: Ana García
+    email: ana@test.com
+    role: admin
+  - id: 2
+    name: Luis Pérez
+    email: luis@test.com
+    role: editor
+
+posts:
+  - id: 1
+    userId: 1
+    title: Getting started with yrest
+    published: true
+  - id: 2
+    userId: 2
+    title: Advanced relations in yrest
+    published: false
+
+comments:
+  - id: 1
+    postId: 1
+    userId: 2
+    body: Great article!

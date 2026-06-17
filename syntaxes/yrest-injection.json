@@ -1,0 +1,20 @@
+{
+  "scopeName": "yrest.injection",
+  "injectionSelector": "L:source.ts, L:source.js, L:source.tsx, L:source.jsx",
+  "patterns": [
+    { "include": "#yrestTaggedTemplate" }
+  ],
+  "repository": {
+    "yrestTaggedTemplate": {
+      "begin": "(?<![.\\w])(yrest)`",
+      "beginCaptures": {
+        "1": { "name": "entity.name.function.tagged-template.yrest" }
+      },
+      "end": "`",
+      "contentName": "meta.embedded.block.yrest",
+      "patterns": [
+        { "include": "source.yrest" }
+      ]
+    }
+  }
+}

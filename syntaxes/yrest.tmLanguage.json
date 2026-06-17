@@ -1,0 +1,43 @@
+{
+  "name": "YRest",
+  "scopeName": "source.yrest",
+  "patterns": [
+    { "include": "#yrestReservedKeys" },
+    { "include": "#yrestDslString" },
+    { "include": "#yrestRelationTypes" },
+    { "include": "#yrestCardinality" },
+    { "include": "#yrestTemplateVar" },
+    { "include": "source.yaml" }
+  ],
+  "repository": {
+    "yrestReservedKeys": {
+      "match": "(?<=^\\s*)(_rel|_routes|_schema|_type|_target|_foreignKey|_otherKey|_primaryKey|_car-direct|_car-inverse|_nested|_through)(?=\\s*:)",
+      "name": "keyword.control.yrest"
+    },
+    "yrestDslString": {
+      "comment": "DSL strings: 'm2o:target@fk[1..1->0..n]+nested'",
+      "match": "\"(m2o|o2o|m2m|many2one|one2one|many2many):([^@\\[+(\"\\s]+)(?:@([^\\[(\"\\s]+))?(?:\\[([0-9n]\\.\\.[0-9n1])->([0-9n]\\.\\.[0-9n1])\\])?(\\+nested)?\"",
+      "captures": {
+        "1": { "name": "keyword.other.relation-type.yrest" },
+        "2": { "name": "entity.name.type.target.yrest" },
+        "3": { "name": "variable.other.foreignkey.yrest" },
+        "4": { "name": "constant.numeric.cardinality.direct.yrest" },
+        "5": { "name": "constant.numeric.cardinality.inverse.yrest" },
+        "6": { "name": "keyword.control.nested.yrest" }
+      }
+    },
+    "yrestRelationTypes": {
+      "match": "(?<=:\\s*)(many2one|one2many|one2one|many2many)(?=\\s*$)",
+      "name": "storage.type.relation.yrest"
+    },
+    "yrestCardinality": {
+      "match": "\\b(0\\.\\.[1n]|1\\.\\.[1n]|n\\.\\.[nm])\\b",
+      "name": "constant.numeric.cardinality.yrest"
+    },
+    "yrestTemplateVar": {
+      "comment": "Template variables: {{params.id}}, {{now}}, {{uuid}}, {{body.field}}",
+      "match": "\\{\\{[^}]+\\}\\}",
+      "name": "variable.other.template.yrest"
+    }
+  }
+}
