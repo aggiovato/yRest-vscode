@@ -1,12 +1,28 @@
-import { createYrestServer } from "@aggiovato/yrest";
+// Example: yrest tagged template in TypeScript test setup.
+//
+// The yrest tagged template and `createYrestServer` are part of the
+// planned programmatic API for @aggiovato/yrest. The DSL and inline
+// content support will be available once the monorepo migration
+// (packages/core + packages/server) is complete.
+//
+// This file exists to demonstrate grammar highlighting for the yrest``
+// tagged template — it is not meant to be executed as-is.
 
-// Tagged template: el contenido debería recibir highlighting de yrest
+declare function yrest(
+  strings: TemplateStringsArray,
+  ...values: unknown[]
+): string;
+declare function createYrestServer(opts: {
+  content: string;
+  port: number;
+}): Promise<{ start(): Promise<void>; stop(): Promise<void> }>;
+
 const fixture = yrest`
   _rel:
     posts:
       userId: "m2o:users[1..1->0..n]+nested"
     comments:
-      postId: "m2o:posts[1..1->0..n]"
+      postId: "m2o:posts[1..1->0..n]+nested"
       userId: "m2o:users[1..1->0..n]"
 
   users:
@@ -30,7 +46,6 @@ const fixture = yrest`
       body: Nice post!
 `;
 
-// Otro caso: inline con many2many y _routes
 const authFixture = yrest`
   _rel:
     users:
@@ -51,6 +66,14 @@ const authFixture = yrest`
         status: 401
         body: { error: Unauthorized }
 
+    - method: GET
+      path: /users/:id/profile
+      response:
+        status: 200
+        body:
+          userId: "{{params.id}}"
+          fetchedAt: "{{now}}"
+
   users:
     - id: 1
       email: admin@test.com
@@ -68,13 +91,8 @@ const authFixture = yrest`
       roleId: 1
 `;
 
-// Uso programático con el fixture
 async function startTestServer() {
-  const server = await createYrestServer({
-    content: fixture,
-    port: 3099,
-  });
-
+  const server = await createYrestServer({ content: fixture, port: 3099 });
   await server.start();
   return server;
 }

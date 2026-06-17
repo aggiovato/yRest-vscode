@@ -1,0 +1,23 @@
+{
+  "scopeName": "yrest.yaml.injection",
+  "injectionSelector": "source.yaml, source.yrest",
+  "patterns": [
+    { "include": "#yrestReservedKeys" },
+    { "include": "#yrestRelationTypes" },
+    { "include": "#yrestCardinality" }
+  ],
+  "repository": {
+    "yrestReservedKeys": {
+      "match": "(?<=^[ \\t]*)(_rel|_routes|_schema|_type|_target|_foreignKey|_otherKey|_primaryKey|_car-direct|_car-inverse|_nested|_through)(?=[ \\t]*:)",
+      "name": "keyword.control.yrest"
+    },
+    "yrestRelationTypes": {
+      "match": "(?<=:[ \\t]*)(many2one|one2many|one2one|many2many)[ \\t]*$",
+      "name": "storage.type.relation.yrest"
+    },
+    "yrestCardinality": {
+      "match": "\\b(0\\.\\.[1n]|1\\.\\.[1n])\\b",
+      "name": "constant.numeric.cardinality.yrest"
+    }
+  }
+}

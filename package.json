@@ -56,6 +56,16 @@
         "embeddedLanguages": {
           "meta.embedded.block.yrest": "yrest"
         }
+      },
+      {
+        "scopeName": "yrest.yaml.injection",
+        "path": "./syntaxes/yrest-yaml-injection.json",
+        "injectTo": ["source.yaml", "source.yrest"]
+      },
+      {
+        "scopeName": "yrest.yaml.string.injection",
+        "path": "./syntaxes/yrest-yaml-strings.json",
+        "injectTo": ["source.yaml", "source.yrest"]
       }
     ]
   },

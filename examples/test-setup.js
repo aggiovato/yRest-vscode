@@ -4,7 +4,7 @@ const fixture = yrest`
   _rel:
     orders:
       userId: "m2o:users[1..1->0..n]+nested"
-      statusId: "m2o:statuses[1..1->0..n]"
+      statusId: "many2one:statuses[1..1->0..n]+nested"
     items:
       orderId:
         _type: many2one

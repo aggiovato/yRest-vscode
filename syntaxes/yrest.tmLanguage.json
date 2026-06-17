@@ -3,7 +3,7 @@
   "scopeName": "source.yrest",
   "patterns": [
     { "include": "#yrestReservedKeys" },
-    { "include": "#yrestDslString" },
+    { "include": "#yrestDoubleQuotedString" },
     { "include": "#yrestRelationTypes" },
     { "include": "#yrestCardinality" },
     { "include": "#yrestTemplateVar" },
@@ -14,9 +14,20 @@
       "match": "(?<=^\\s*)(_rel|_routes|_schema|_type|_target|_foreignKey|_otherKey|_primaryKey|_car-direct|_car-inverse|_nested|_through)(?=\\s*:)",
       "name": "keyword.control.yrest"
     },
-    "yrestDslString": {
-      "comment": "DSL strings: 'm2o:target@fk[1..1->0..n]+nested'",
-      "match": "\"(m2o|o2o|m2m|many2one|one2one|many2many):([^@\\[+(\"\\s]+)(?:@([^\\[(\"\\s]+))?(?:\\[([0-9n]\\.\\.[0-9n1])->([0-9n]\\.\\.[0-9n1])\\])?(\\+nested)?\"",
+    "yrestDoubleQuotedString": {
+      "comment": "Double-quoted string: captured before yaml so we can process its content (DSL, {{vars}}, paths).",
+      "begin": "\"",
+      "end": "\"",
+      "name": "string.quoted.double.yrest",
+      "patterns": [
+        { "include": "#yrestDslContent" },
+        { "include": "#yrestTemplateVar" },
+        { "include": "#yrestPathParam" }
+      ]
+    },
+    "yrestDslContent": {
+      "comment": "DSL string content (no outer quotes): 'm2o:target@fk[1..1->0..n]+nested'",
+      "match": "(m2o|o2o|m2m|many2one|one2one|many2many):([^@\\[\\s\"(]+)(?:@([^\\[\\s\"(]+)(?:\\([^)]+\\))?)?(?:\\[([0-9n]\\.\\.[0-9n1])->([0-9n]\\.\\.[0-9n1])\\])?(\\+nested)?",
       "captures": {
         "1": { "name": "keyword.other.relation-type.yrest" },
         "2": { "name": "entity.name.type.target.yrest" },
@@ -26,6 +37,16 @@
         "6": { "name": "keyword.control.nested.yrest" }
       }
     },
+    "yrestTemplateVar": {
+      "comment": "Template variables: {{params.id}}, {{now}}, {{uuid}}, {{body.field}}",
+      "match": "\\{\\{[^}]+\\}\\}",
+      "name": "variable.other.template.yrest"
+    },
+    "yrestPathParam": {
+      "comment": "Path parameters in _routes path values: /orders/:id/summary",
+      "match": ":[a-zA-Z_][a-zA-Z0-9_]*",
+      "name": "variable.other.path-param.yrest"
+    },
     "yrestRelationTypes": {
       "match": "(?<=:\\s*)(many2one|one2many|one2one|many2many)(?=\\s*$)",
       "name": "storage.type.relation.yrest"
@@ -33,11 +54,6 @@
     "yrestCardinality": {
       "match": "\\b(0\\.\\.[1n]|1\\.\\.[1n]|n\\.\\.[nm])\\b",
       "name": "constant.numeric.cardinality.yrest"
-    },
-    "yrestTemplateVar": {
-      "comment": "Template variables: {{params.id}}, {{now}}, {{uuid}}, {{body.field}}",
-      "match": "\\{\\{[^}]+\\}\\}",
-      "name": "variable.other.template.yrest"
     }
   }
 }
