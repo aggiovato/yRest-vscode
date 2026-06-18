@@ -15,6 +15,7 @@
 import * as vscode from "vscode";
 import { validateYrestDocument } from "./validator/validator.js";
 import { registerHoverProvider } from "./docs/hover.js";
+import { registerCompletionProvider } from "./docs/completion.js";
 
 let diagnostics: vscode.DiagnosticCollection;
 
@@ -32,6 +33,7 @@ export function activate(context: vscode.ExtensionContext): void {
   context.subscriptions.push(diagnostics);
 
   registerHoverProvider(context);
+  registerCompletionProvider(context);
 
   if (vscode.window.activeTextEditor) {
     validate(vscode.window.activeTextEditor.document);

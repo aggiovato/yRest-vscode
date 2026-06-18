@@ -8,6 +8,23 @@ _rel:
     postId: posts
     userId: users
 
+_schema:
+  users:
+    id: integer
+    name: string
+    email: string
+    role: string
+  posts:
+    id: integer
+    userId: integer
+    title: string
+    published: boolean
+  comments:
+    id: integer
+    postId: integer
+    userId: integer
+    body: string
+
 users:
   - id: 1
     name: Ana García
