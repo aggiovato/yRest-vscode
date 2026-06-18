@@ -1,6 +1,6 @@
 {
   "name": "yrest",
-  "displayName": "YRest Language Support",
+  "displayName": "yRest Language Support",
   "description": "Syntax highlighting, diagnostics and autocompletion for YRest YAML files (db.yml).",
   "version": "0.1.0",
   "publisher": "aggiovato",
@@ -30,6 +30,7 @@
       {
         "id": "yrest",
         "aliases": [
+          "yRest",
           "YRest",
           "yrest"
         ],
@@ -85,16 +86,19 @@
     "compile": "tsc -p ./",
     "watch": "tsc -watch -p ./",
     "package": "vsce package",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "devDependencies": {
     "@types/node": "^20.0.0",
     "@types/vscode": "^1.90.0",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^7.0.0",
+    "@vscode/vsce": "^2.26.0",
     "eslint": "^8.0.0",
     "typescript": "^5.4.0",
-    "@vscode/vsce": "^2.26.0"
+    "vitest": "^4.1.9"
   },
   "dependencies": {
     "yaml": "^2.4.0"

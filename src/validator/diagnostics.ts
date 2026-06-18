@@ -33,7 +33,7 @@ export function diagnosticAtToken(
   text: string,
   token: string,
   message: string,
-  severity: Severity = "error"
+  severity: Severity = "error",
 ): vscode.Diagnostic {
   const idx = text.indexOf(token);
   const start = idx === -1 ? 0 : idx;
@@ -41,7 +41,7 @@ export function diagnosticAtToken(
   return new vscode.Diagnostic(
     new vscode.Range(doc.positionAt(start), doc.positionAt(end)),
     message,
-    SEVERITY_MAP[severity]
+    SEVERITY_MAP[severity],
   );
 }
 
@@ -61,11 +61,11 @@ export function diagnosticAtOffset(
   startOffset: number,
   endOffset: number,
   message: string,
-  severity: Severity = "error"
+  severity: Severity = "error",
 ): vscode.Diagnostic {
   return new vscode.Diagnostic(
     new vscode.Range(doc.positionAt(startOffset), doc.positionAt(endOffset)),
     message,
-    SEVERITY_MAP[severity]
+    SEVERITY_MAP[severity],
   );
 }

@@ -19,10 +19,19 @@ tasks:
     desc: Check code with ESLint
     cmd: npm run lint
 
+  test:
+    desc: Run unit tests
+    cmd: npm run test
+
+  test:watch:
+    desc: Run unit tests in watch mode
+    cmd: npm run test:watch
+
   preflight:
-    desc: Full pre-push check — compile and package
+    desc: Full pre-push check — compile, test and package
     cmds:
       - task: compile
+      - task: test
       - task: package
       - cmd: |
           printf "\n\033[1;34m┌──────────────────────────────────────────┐\033[0m\n"

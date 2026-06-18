@@ -25,5 +25,8 @@ jobs:
       - name: Compile TypeScript
         run: npm run compile
 
+      - name: Run unit tests
+        run: npm run test
+
       - name: Package VSIX
         run: npx vsce package --no-dependencies

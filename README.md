@@ -1,4 +1,4 @@
-# YRest Language Support
+# yRest Language Support
 
 VS Code extension for [yrest](https://github.com/aggiovato/yaml-rest) — the zero-config YAML-based REST API mock server.
 
@@ -12,17 +12,17 @@ Provides syntax highlighting, diagnostics and autocompletion for `db.yml` and `*
 
 Highlights yrest-specific constructs on top of standard YAML:
 
-| Token | Example | Color role |
-|---|---|---|
-| Reserved keys | `_rel`, `_routes`, `_schema`, `_type`, `_target` | `keyword.control` |
-| Relation types | `many2one`, `one2one`, `many2many` | `storage.type` |
-| DSL type alias | `m2o`, `o2o`, `m2m` inside a string | `keyword.other` |
-| DSL target | collection name after `:` in DSL string | `entity.name.type` |
-| DSL foreign key | field after `@` in DSL string | `variable.other` |
-| Cardinality | `1..1`, `0..n`, `1..n`, `0..1` | `constant.numeric` |
-| `+nested` flag | suffix in DSL string | `keyword.control` |
-| Template variables | `{{params.id}}`, `{{now}}`, `{{uuid}}` | `variable.other` |
-| Path parameters | `:id`, `:slug` in `_routes` paths | `variable.other` |
+| Token              | Example                                          | Color role         |
+| ------------------ | ------------------------------------------------ | ------------------ |
+| Reserved keys      | `_rel`, `_routes`, `_schema`, `_type`, `_target` | `keyword.control`  |
+| Relation types     | `many2one`, `one2one`, `many2many`               | `storage.type`     |
+| DSL type alias     | `m2o`, `o2o`, `m2m` inside a string              | `keyword.other`    |
+| DSL target         | collection name after `:` in DSL string          | `entity.name.type` |
+| DSL foreign key    | field after `@` in DSL string                    | `variable.other`   |
+| Cardinality        | `1..1`, `0..n`, `1..n`, `0..1`                   | `constant.numeric` |
+| `+nested` flag     | suffix in DSL string                             | `keyword.control`  |
+| Template variables | `{{params.id}}`, `{{now}}`, `{{uuid}}`           | `variable.other`   |
+| Path parameters    | `:id`, `:slug` in `_routes` paths                | `variable.other`   |
 
 Injections are also active in plain `.yaml` files and inside TypeScript/JavaScript (e.g. test setup files using `yrest`).
 
@@ -43,9 +43,9 @@ Validates on every save and keystroke:
 
 The extension activates automatically for:
 
-| Pattern | How |
-|---|---|
-| `db.yml`, `db.yaml` | By filename |
+| Pattern                       | How          |
+| ----------------------------- | ------------ |
+| `db.yml`, `db.yaml`           | By filename  |
 | `*.yrest.yml`, `*.yrest.yaml` | By extension |
 
 For any other filename, add to your VS Code settings:
@@ -130,13 +130,13 @@ No additional runtime dependencies are needed. The extension bundles its own `ya
 
 ## Roadmap
 
-| Version | Features |
-|---|---|
-| **v0.1** (current) | Language support, syntax highlighting, diagnostics |
-| **v0.2** | Hover docs for all reserved keys and relation types; autocomplete for `_type`, `_target`, cardinalities, collection names |
-| **v0.3** | Smart validation via `@yrest/core`; quick fixes (convert shorthand → verbose, add missing `_type`/`_target`) |
-| **v0.4** | `_routes` and `_schema` full support (highlighting, diagnostics, autocomplete) |
-| **v1.0** | Language Server migration; go-to-collection, rename refactoring, cross-file analysis |
+| Version            | Features                                                                                                                  |
+| ------------------ | ------------------------------------------------------------------------------------------------------------------------- |
+| **v0.1** (current) | Language support, syntax highlighting, diagnostics                                                                        |
+| **v0.2**           | Hover docs for all reserved keys and relation types; autocomplete for `_type`, `_target`, cardinalities, collection names |
+| **v0.3**           | Smart validation via `@yrest/core`; quick fixes (convert shorthand → verbose, add missing `_type`/`_target`)              |
+| **v0.4**           | `_routes` and `_schema` full support (highlighting, diagnostics, autocomplete)                                            |
+| **v1.0**           | Language Server migration; go-to-collection, rename refactoring, cross-file analysis                                      |
 
 ---
 

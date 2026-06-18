@@ -12,8 +12,14 @@
  * @example `many2one`, `m2o`, `one2one`, `o2o`, `many2many`, `m2m`
  */
 export const VALID_RELATION_TYPES = new Set([
-  "many2one", "one2many", "one2one", "many2many",
-  "m2o", "o2m", "o2o", "m2m",
+  "many2one",
+  "one2many",
+  "one2one",
+  "many2many",
+  "m2o",
+  "o2m",
+  "o2o",
+  "m2m",
 ]);
 
 /**
@@ -45,6 +51,4 @@ export const DSL_REGEX =
 /**
  * yrest-specific YAML keys that are reserved and must not be treated as collection names.
  */
-export const RESERVED_KEYS = new Set([
-  "_rel", "_routes", "_schema",
-]);
+export const RESERVED_KEYS = new Set(["_rel", "_routes", "_schema"]);
