@@ -11,7 +11,7 @@
   ],
   "repository": {
     "yrestReservedKeys": {
-      "match": "(?<=^\\s*)(_rel|_routes|_schema|_type|_target|_foreignKey|_otherKey|_primaryKey|_car-direct|_car-inverse|_nested|_through)(?=\\s*:)",
+      "match": "(?<=^\\s*)(_rel|_routes|_schema|_type|_target|_foreignKey|_otherKey|_primaryKey|_car-direct|_car-inverse|_nested|_through|_method|_path|_handler|_delay|_error|_errorBody|_response|_otherwise|_scenarios|_when|_status|_body|_headers)(?=\\s*:)",
       "name": "keyword.control.yrest"
     },
     "yrestDoubleQuotedString": {

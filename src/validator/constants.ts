@@ -52,3 +52,55 @@ export const DSL_REGEX =
  * yrest-specific YAML keys that are reserved and must not be treated as collection names.
  */
 export const RESERVED_KEYS = new Set(["_rel", "_routes", "_schema"]);
+
+/**
+ * Keys valid at the top level of a `_routes` list entry.
+ */
+export const ROUTE_ENTRY_KEYS = [
+  { label: "_method", detail: "HTTP method: GET, POST, PUT, PATCH, DELETE…" },
+  { label: "_path", detail: "URL path, supports :param segments" },
+  { label: "_handler", detail: "Handler function name from yrest.handlers.js" },
+  {
+    label: "_response",
+    detail: "Static response block (_status, _body, _headers)",
+  },
+  { label: "_scenarios", detail: "List of conditional response variants" },
+  { label: "_otherwise", detail: "Fallback when no scenario matches" },
+  { label: "_delay", detail: "Simulated latency in ms before responding" },
+  { label: "_error", detail: "Force an HTTP error status (e.g. 503)" },
+  { label: "_errorBody", detail: "Body returned alongside _error" },
+] as const;
+
+/**
+ * Keys valid inside a `_response` or `_otherwise` block.
+ */
+export const RESPONSE_BLOCK_KEYS = [
+  { label: "_status", detail: "HTTP status code (default: 200)" },
+  { label: "_body", detail: "Response body — any YAML value" },
+  { label: "_headers", detail: "Additional response headers" },
+] as const;
+
+/**
+ * Keys valid inside a `_scenarios` list entry.
+ */
+export const SCENARIO_ENTRY_KEYS = [
+  {
+    label: "_when",
+    detail: "Condition: object (AND) or array of objects (OR of ANDs)",
+  },
+  {
+    label: "_response",
+    detail: "Response returned when the condition matches",
+  },
+] as const;
+
+/** HTTP methods accepted by `_method`. */
+export const HTTP_METHODS = [
+  "GET",
+  "POST",
+  "PUT",
+  "PATCH",
+  "DELETE",
+  "HEAD",
+  "OPTIONS",
+] as const;

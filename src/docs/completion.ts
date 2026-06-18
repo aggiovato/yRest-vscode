@@ -8,13 +8,23 @@
  * - `_nested` values: boolean
  * - Verbose relation keys inside a `_rel` object block
  * - Shorthand relation values: collection names
+ * - `_method` values: HTTP methods
+ * - `_routes` entry keys: `_method`, `_path`, `_handler`, `_response`, etc.
+ * - `_response` / `_otherwise` block keys: `_status`, `_body`, `_headers`
+ * - `_scenarios` entry keys: `_when`, `_response`
  *
  * @module completion
  */
 
 import * as vscode from "vscode";
 import { parse } from "yaml";
-import { RESERVED_KEYS } from "../validator/constants.js";
+import {
+  RESERVED_KEYS,
+  ROUTE_ENTRY_KEYS,
+  RESPONSE_BLOCK_KEYS,
+  SCENARIO_ENTRY_KEYS,
+  HTTP_METHODS,
+} from "../validator/constants.js";
 
 // ─── Static completion lists ──────────────────────────────────────────────────
 
@@ -61,8 +71,12 @@ type CompletionContext =
   | "collection-value"
   | "cardinality-value"
   | "nested-value"
+  | "method-value"
   | "verbose-key"
   | "shorthand-value"
+  | "route-entry-key"
+  | "response-block-key"
+  | "scenario-entry-key"
   | null;
 
 function getCompletionContext(
@@ -70,31 +84,70 @@ function getCompletionContext(
   position: vscode.Position,
   linePrefix: string,
 ): CompletionContext {
+  // ── Value completions (line-prefix is enough) ────────────────────────────
   if (/_type:\s*$/.test(linePrefix)) return "type-value";
   if (/(_target|_through):\s*$/.test(linePrefix)) return "collection-value";
   if (/_car-(direct|inverse):\s*$/.test(linePrefix)) return "cardinality-value";
   if (/_nested:\s*$/.test(linePrefix)) return "nested-value";
+  if (/_method:\s*$/.test(linePrefix)) return "method-value";
 
-  if (!isInsideRelBlock(document, position)) return null;
-
+  // ── Key completions (need block context) ─────────────────────────────────
   const indent = linePrefix.match(/^(\s*)/)?.[1].length ?? 0;
+  const isKeyPosition = /^\s*(_\w*)?$/.test(linePrefix);
 
-  // Verbose key position: deeply indented line with only spaces so far (or a _ prefix)
-  if (indent >= 6 && /^\s*(_\w*)?$/.test(linePrefix)) return "verbose-key";
+  if (isKeyPosition) {
+    if (isInsideBlock(document, position, "_scenarios"))
+      return "scenario-entry-key";
+    if (
+      isInsideBlock(document, position, "_response") ||
+      isInsideBlock(document, position, "_otherwise")
+    )
+      return "response-block-key";
+    if (isInsideBlock(document, position, "_routes")) return "route-entry-key";
+    if (isInsideRelBlock(document, position) && indent >= 6)
+      return "verbose-key";
+  }
 
-  // Shorthand value position: `  fieldName: ` with a plain identifier key
-  if (/^\s{2,}[a-zA-Z]\w*:\s*$/.test(linePrefix)) return "shorthand-value";
+  // ── Shorthand relation value ──────────────────────────────────────────────
+  if (
+    /^\s{2,}[a-zA-Z]\w*:\s*$/.test(linePrefix) &&
+    isInsideRelBlock(document, position)
+  ) {
+    return "shorthand-value";
+  }
 
   return null;
 }
 
 /**
- * Scans upward from `position` to determine whether the cursor is inside a
- * `_rel:` block.
+ * Scans upward from `position` to find the nearest ancestor block key.
  *
- * Uses indentation as a heuristic: finds the first ancestor line with less
- * indentation than the current one and checks whether it starts with `_rel:`.
- * Handles arbitrarily nested `_rel` blocks.
+ * Returns `true` when the first ancestor with lower indentation matches
+ * the given `blockKey` (e.g. `"_routes"`, `"_rel"`, `"_scenarios"`).
+ */
+function isInsideBlock(
+  document: vscode.TextDocument,
+  position: vscode.Position,
+  blockKey: string,
+): boolean {
+  const currentIndent =
+    document.lineAt(position).text.match(/^(\s*)/)?.[1].length ?? 0;
+
+  for (let i = position.line - 1; i >= 0; i--) {
+    const line = document.lineAt(i).text;
+    if (line.trim() === "") continue;
+
+    const indent = line.match(/^(\s*)/)?.[1].length ?? 0;
+    if (indent < currentIndent) {
+      return new RegExp(`^\\s*${blockKey}\\s*:`).test(line);
+    }
+  }
+  return false;
+}
+
+/**
+ * Returns `true` when the cursor is inside a `_rel:` block at any nesting level.
+ * Walks up recursively so verbose relation objects (indented inside entity keys) are detected.
  */
 function isInsideRelBlock(
   document: vscode.TextDocument,
@@ -204,6 +257,15 @@ export function registerCompletionProvider(
                 ),
               ];
 
+            case "method-value":
+              return HTTP_METHODS.map((m) =>
+                typeItem(
+                  m,
+                  "HTTP method",
+                  vscode.CompletionItemKind.EnumMember,
+                ),
+              );
+
             case "verbose-key":
               return VERBOSE_REL_KEYS.map(({ label, detail }) =>
                 typeItem(label, detail, vscode.CompletionItemKind.Property),
@@ -211,6 +273,21 @@ export function registerCompletionProvider(
 
             case "shorthand-value":
               return getCollectionNames(document).map(collectionItem);
+
+            case "route-entry-key":
+              return ROUTE_ENTRY_KEYS.map(({ label, detail }) =>
+                typeItem(label, detail, vscode.CompletionItemKind.Property),
+              );
+
+            case "response-block-key":
+              return RESPONSE_BLOCK_KEYS.map(({ label, detail }) =>
+                typeItem(label, detail, vscode.CompletionItemKind.Property),
+              );
+
+            case "scenario-entry-key":
+              return SCENARIO_ENTRY_KEYS.map(({ label, detail }) =>
+                typeItem(label, detail, vscode.CompletionItemKind.Property),
+              );
 
             default:
               return [];
