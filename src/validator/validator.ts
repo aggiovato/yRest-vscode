@@ -15,7 +15,11 @@
 import * as vscode from "vscode";
 import { parseDocument } from "yaml";
 import { diagnosticAtToken, diagnosticAtOffset } from "./diagnostics.js";
-import { extractCollections, validateRelations } from "./validate.js";
+import {
+  extractCollections,
+  validateRelations,
+  validateRoutes,
+} from "./validate.js";
 
 // ─── Public API ───────────────────────────────────────────────────────────────
 
@@ -55,7 +59,12 @@ export function validateYrestDocument(
   }
 
   const collections = extractCollections(data);
+
   for (const issue of validateRelations(data, collections)) {
+    diagnostics.push(diagnosticAtToken(doc, text, issue.token, issue.message));
+  }
+
+  for (const issue of validateRoutes(data)) {
     diagnostics.push(diagnosticAtToken(doc, text, issue.token, issue.message));
   }
 

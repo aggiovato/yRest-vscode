@@ -13,6 +13,9 @@ import {
   VALID_CARDINALITIES,
   DSL_REGEX,
   RESERVED_KEYS,
+  BARE_ROUTE_ENTRY_KEYS,
+  BARE_RESPONSE_KEYS,
+  BARE_SCENARIO_KEYS,
 } from "./constants.js";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -86,6 +89,81 @@ export function validateRelations(
       fields as Record<string, unknown>,
     )) {
       issues.push(...validateRelDef(collections, field, def as RelDef));
+    }
+  }
+
+  return issues;
+}
+
+/**
+ * Validates the `_routes` block of a parsed yrest document.
+ *
+ * Reports any bare (non-`_`-prefixed) key that should carry the `_` prefix
+ * per the yrest reserved-word convention (v0.11.0+).
+ *
+ * @param data - Parsed root YAML object.
+ * @returns    Array of validation issues found (empty if valid).
+ */
+export function validateRoutes(
+  data: Record<string, unknown>,
+): ValidationIssue[] {
+  const issues: ValidationIssue[] = [];
+  const routes = data["_routes"];
+  if (!Array.isArray(routes)) return issues;
+
+  for (const entry of routes) {
+    if (!entry || typeof entry !== "object" || Array.isArray(entry)) continue;
+    const route = entry as Record<string, unknown>;
+
+    // Top-level route entry keys
+    for (const key of Object.keys(route)) {
+      if (BARE_ROUTE_ENTRY_KEYS[key]) {
+        issues.push({
+          token: key,
+          message: `Use \`${BARE_ROUTE_ENTRY_KEYS[key]}\` instead of \`${key}\` inside _routes entries.`,
+        });
+      }
+    }
+
+    // Keys inside _response and _otherwise blocks
+    for (const blockKey of [
+      "_response",
+      "_otherwise",
+      "response",
+      "otherwise",
+    ] as const) {
+      const block = route[blockKey];
+      if (!block || typeof block !== "object" || Array.isArray(block)) continue;
+      for (const key of Object.keys(block as Record<string, unknown>)) {
+        if (BARE_RESPONSE_KEYS[key]) {
+          issues.push({
+            token: key,
+            message: `Use \`${BARE_RESPONSE_KEYS[key]}\` instead of \`${key}\` inside a response block.`,
+          });
+        }
+      }
+    }
+
+    // Keys inside _scenarios entries
+    for (const scenariosKey of ["_scenarios", "scenarios"] as const) {
+      const scenarios = route[scenariosKey];
+      if (!Array.isArray(scenarios)) continue;
+      for (const scenario of scenarios) {
+        if (
+          !scenario ||
+          typeof scenario !== "object" ||
+          Array.isArray(scenario)
+        )
+          continue;
+        for (const key of Object.keys(scenario as Record<string, unknown>)) {
+          if (BARE_SCENARIO_KEYS[key]) {
+            issues.push({
+              token: key,
+              message: `Use \`${BARE_SCENARIO_KEYS[key]}\` instead of \`${key}\` inside a _scenarios entry.`,
+            });
+          }
+        }
+      }
     }
   }
 

@@ -94,6 +94,39 @@ export const SCENARIO_ENTRY_KEYS = [
   },
 ] as const;
 
+/**
+ * Bare (no-underscore) keys that are invalid at the top level of a `_routes` entry.
+ * Maps the wrong key → the correct `_`-prefixed key.
+ */
+export const BARE_ROUTE_ENTRY_KEYS: Record<string, string> = {
+  method: "_method",
+  path: "_path",
+  handler: "_handler",
+  response: "_response",
+  scenarios: "_scenarios",
+  otherwise: "_otherwise",
+  delay: "_delay",
+  error: "_error",
+  errorBody: "_errorBody",
+};
+
+/**
+ * Bare keys invalid inside a `_response` or `_otherwise` block.
+ */
+export const BARE_RESPONSE_KEYS: Record<string, string> = {
+  status: "_status",
+  body: "_body",
+  headers: "_headers",
+};
+
+/**
+ * Bare keys invalid inside a `_scenarios` list entry.
+ */
+export const BARE_SCENARIO_KEYS: Record<string, string> = {
+  when: "_when",
+  response: "_response",
+};
+
 /** HTTP methods accepted by `_method`. */
 export const HTTP_METHODS = [
   "GET",

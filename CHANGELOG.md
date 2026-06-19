@@ -7,6 +7,15 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ---
 
+## [0.2.1] — 2026-06-19
+
+### Added
+
+- **`_routes` diagnostics:** validates that route entries use the `_`-prefixed key convention — flags bare keys like `method`, `path`, `response`, `when`, `status`, `body`, etc. and suggests the correct form (`_method`, `_path`, `_response`, `_when`, `_status`, `_body`…) at three levels: route entry, `_response`/`_otherwise` block, and `_scenarios` entries
+- **Unit tests:** 14 new tests for `validateRoutes` covering all bare-key cases (45 total)
+
+---
+
 ## [0.2.0] — 2026-06-19
 
 ### Added
@@ -14,7 +23,7 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - **Hover documentation:** inline markdown docs appear when hovering any yrest reserved key, relation type, cardinality notation or `+nested` flag — covering `_rel`, `_routes`, `_schema` and all nested keys (`_type`, `_target`, `_foreignKey`, `_otherKey`, `_primaryKey`, `_through`, `_car-direct`, `_car-inverse`, `_nested`, `_method`, `_path`, `_handler`, `_response`, `_scenarios`, `_otherwise`, `_delay`, `_error`, `_errorBody`, `_status`, `_body`, `_headers`, `_when`) plus all relation type aliases (`many2one`, `m2o`, `one2one`, `o2o`, `many2many`, `m2m`) and cardinalities (`1..1`, `0..1`, `1..n`, `0..n`). Hover also works inside TypeScript/JavaScript tagged template literals (`yrest\`...\``)
 - **Autocomplete provider:** context-aware completions for 10 distinct scenarios — `_type` values (relation types + aliases), `_target`/`_through` values (collection names from the document), `_car-direct`/`_car-inverse` values (cardinality notation), `_nested` values (`true`/`false`), `_method` values (HTTP methods), verbose relation keys inside `_rel` object blocks, shorthand relation target values, `_routes` entry keys, `_response`/`_otherwise` block keys, and `_scenarios` entry keys
 - **Grammar — `_routes` keys:** added 13 new reserved key highlights in both `yrest.tmLanguage.json` and `yrest-yaml-injection.json`: `_method`, `_path`, `_handler`, `_delay`, `_error`, `_errorBody`, `_response`, `_otherwise`, `_scenarios`, `_when`, `_status`, `_body`, `_headers`
-- **Unit tests:** 31 tests covering pure validation logic (`extractCollections`, `validateRelations` for all DSL levels and verbose form) and all shared constants (`ROUTE_ENTRY_KEYS`, `RESPONSE_BLOCK_KEYS`, `SCENARIO_ENTRY_KEYS`, `HTTP_METHODS`, `RESERVED_KEYS`)
+- **Unit tests:** 31 tests covering pure validation logic and shared constants
 
 ---
 

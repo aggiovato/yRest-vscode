@@ -46,18 +46,18 @@ const db = yrest`
 
 Context-aware completions trigger on `Space` and `:` — no `Ctrl+Space` needed:
 
-| Context | Completions offered |
-| --- | --- |
-| `_type:` value | Relation types and aliases |
-| `_target:` / `_through:` value | Collection names from the document |
-| `_car-direct:` / `_car-inverse:` value | `1..1`, `0..1`, `1..n`, `0..n` |
-| `_nested:` value | `true` / `false` |
-| `_method:` value | `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `HEAD`, `OPTIONS` |
-| Key inside `_rel` object block | `_type`, `_target`, `_foreignKey`, `_through`, `_car-direct`, `_car-inverse`, `_nested`… |
-| Shorthand relation value | Collection names from the document |
-| Key inside `_routes` list entry | `_method`, `_path`, `_handler`, `_response`, `_scenarios`, `_otherwise`, `_delay`, `_error`, `_errorBody` |
-| Key inside `_response` / `_otherwise` | `_status`, `_body`, `_headers` |
-| Key inside `_scenarios` entry | `_when`, `_response` |
+| Context                                | Completions offered                                                                                       |
+| -------------------------------------- | --------------------------------------------------------------------------------------------------------- |
+| `_type:` value                         | Relation types and aliases                                                                                |
+| `_target:` / `_through:` value         | Collection names from the document                                                                        |
+| `_car-direct:` / `_car-inverse:` value | `1..1`, `0..1`, `1..n`, `0..n`                                                                            |
+| `_nested:` value                       | `true` / `false`                                                                                          |
+| `_method:` value                       | `GET`, `POST`, `PUT`, `PATCH`, `DELETE`, `HEAD`, `OPTIONS`                                                |
+| Key inside `_rel` object block         | `_type`, `_target`, `_foreignKey`, `_through`, `_car-direct`, `_car-inverse`, `_nested`…                  |
+| Shorthand relation value               | Collection names from the document                                                                        |
+| Key inside `_routes` list entry        | `_method`, `_path`, `_handler`, `_response`, `_scenarios`, `_otherwise`, `_delay`, `_error`, `_errorBody` |
+| Key inside `_response` / `_otherwise`  | `_status`, `_body`, `_headers`                                                                            |
+| Key inside `_scenarios` entry          | `_when`, `_response`                                                                                      |
 
 ### Diagnostics
 
@@ -69,6 +69,7 @@ Validates on every save and keystroke:
 - **`_type`** must be `many2one`, `one2one`, `many2many` (or aliases `m2o`, `o2o`, `m2m`)
 - **`_car-direct` / `_car-inverse`** must use `0..1`, `1..1`, `1..n` or `0..n`
 - **DSL strings** are validated against the full compact format regex
+- **`_routes` bare keys** — flags keys written without `_` prefix inside `_routes` entries (`method` → use `_method`, `path` → use `_path`, `status` → use `_status`, etc.) at three nesting levels: route entry, `_response`/`_otherwise` block, and `_scenarios` entries
 
 ---
 
@@ -163,13 +164,13 @@ No additional runtime dependencies are needed. The extension bundles its own `ya
 
 ## Roadmap
 
-| Version            | Features                                                                                                                  |
-| ------------------ | ------------------------------------------------------------------------------------------------------------------------- |
-| **v0.1**           | Language support, syntax highlighting, diagnostics                                                                        |
-| **v0.2** (current) | Hover docs for all reserved keys; autocomplete with 10 contexts; full `_routes` key support                               |
-| **v0.3**           | Smart validation via `@yrest/core`; quick fixes (convert shorthand → verbose, add missing `_type`/`_target`)              |
-| **v0.4**           | `_schema` support; diagnostics for `_routes` entries (`_method` valid value, `_path` format)                              |
-| **v1.0**           | Language Server migration; go-to-collection, rename refactoring, cross-file analysis                                      |
+| Version            | Features                                                                                                     |
+| ------------------ | ------------------------------------------------------------------------------------------------------------ |
+| **v0.1**           | Language support, syntax highlighting, diagnostics                                                           |
+| **v0.2** (current) | Hover docs for all reserved keys; autocomplete with 10 contexts; full `_routes` key support                  |
+| **v0.3**           | Smart validation via `@yrest/core`; quick fixes (convert shorthand → verbose, add missing `_type`/`_target`) |
+| **v0.4**           | `_schema` support; diagnostics for `_routes` entries (`_method` valid value, `_path` format)                 |
+| **v1.0**           | Language Server migration; go-to-collection, rename refactoring, cross-file analysis                         |
 
 ---
 
