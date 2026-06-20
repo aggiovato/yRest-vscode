@@ -2,7 +2,7 @@
   "name": "yrest",
   "displayName": "yRest Language Support",
   "description": "Syntax highlighting, diagnostics and autocompletion for YRest YAML files (db.yml).",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "publisher": "aggiovato",
   "license": "MIT",
   "icon": "images/icon.png",
