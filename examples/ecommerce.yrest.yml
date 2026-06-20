@@ -4,20 +4,20 @@
 _schema:
   orders:
     status:
-      type: string
-      required: true
+      _type: string
+      _required: true
     total:
-      type: number
-      required: true
+      _type: number
+      _required: true
   products:
     name:
-      type: string
-      required: true
+      _type: string
+      _required: true
     price:
-      type: number
-      required: true
+      _type: number
+      _required: true
     stock:
-      type: integer
+      _type: integer
 
 _rel:
   orders:
@@ -47,28 +47,28 @@ _rel:
       _car-inverse: 0..n
 
 _routes:
-  - method: POST
-    path: /auth/login
-    scenarios:
-      - when:
-          body.role: admin
-        response:
-          status: 200
-          body:
+  - _method: POST
+    _path: /auth/login
+    _scenarios:
+      - _when:
+          _body.role: admin
+        _response:
+          _status: 200
+          _body:
             token: "{{uuid}}"
             role: admin
             generatedAt: "{{now}}"
-    otherwise:
-      status: 401
-      body:
+    _otherwise:
+      _status: 401
+      _body:
         error: Invalid credentials
-    delay: 300
+    _delay: 300
 
-  - method: GET
-    path: /orders/:id/receipt
-    response:
-      status: 200
-      body:
+  - _method: GET
+    _path: /orders/:id/receipt
+    _response:
+      _status: 200
+      _body:
         orderId: "{{params.id}}"
         issuedAt: "{{now}}"
 

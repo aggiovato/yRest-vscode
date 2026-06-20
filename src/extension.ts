@@ -13,7 +13,10 @@
  */
 
 import * as vscode from "vscode";
-import { validateYrestDocument } from "./validator/validator.js";
+import {
+  validateYrestDocument,
+  validateYrestTemplates,
+} from "./validator/validator.js";
 import { registerHoverProvider } from "./docs/hover.js";
 import { registerCompletionProvider } from "./docs/completion.js";
 
@@ -58,8 +61,16 @@ export function activate(context: vscode.ExtensionContext): void {
  * @param document - The document to validate.
  */
 function validate(document: vscode.TextDocument): void {
-  if (document.languageId !== "yrest") return;
-  diagnostics.set(document.uri, validateYrestDocument(document));
+  if (document.languageId === "yrest") {
+    diagnostics.set(document.uri, validateYrestDocument(document));
+  } else if (
+    document.languageId === "typescript" ||
+    document.languageId === "javascript" ||
+    document.languageId === "typescriptreact" ||
+    document.languageId === "javascriptreact"
+  ) {
+    diagnostics.set(document.uri, validateYrestTemplates(document));
+  }
 }
 
 /** Called by VS Code when the extension deactivates. */

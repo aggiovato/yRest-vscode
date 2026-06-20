@@ -3,6 +3,7 @@
   "scopeName": "source.yrest",
   "patterns": [
     { "include": "#yrestReservedKeys" },
+    { "include": "#yrestConditionPrefix" },
     { "include": "#yrestDoubleQuotedString" },
     { "include": "#yrestRelationTypes" },
     { "include": "#yrestCardinality" },
@@ -11,7 +12,7 @@
   ],
   "repository": {
     "yrestReservedKeys": {
-      "match": "(?<=^\\s*)(_rel|_routes|_schema|_type|_target|_foreignKey|_otherKey|_primaryKey|_car-direct|_car-inverse|_nested|_through|_method|_path|_handler|_delay|_error|_errorBody|_response|_otherwise|_scenarios|_when|_status|_body|_headers)(?=\\s*:)",
+      "match": "(?<=^\\s*(?:-\\s*)?)(_rel|_routes|_schema|_type|_target|_foreignKey|_otherKey|_primaryKey|_car-direct|_car-inverse|_nested|_through|_method|_path|_handler|_delay|_error|_errorBody|_response|_otherwise|_scenarios|_when|_status|_body|_headers)(?=\\s*:)",
       "name": "keyword.control.yrest"
     },
     "yrestDoubleQuotedString": {
@@ -46,6 +47,11 @@
       "comment": "Path parameters in _routes path values: /orders/:id/summary",
       "match": ":[a-zA-Z_][a-zA-Z0-9_]*",
       "name": "variable.other.path-param.yrest"
+    },
+    "yrestConditionPrefix": {
+      "comment": "Dot-notation condition key prefixes in _when blocks: _body.field, _query.x, _params.id, _headers.x — no lookbehind so it works in embedded contexts (yrest`` template literals)",
+      "match": "(_body|_query|_params|_headers)(?=\\.\\w)",
+      "name": "keyword.control.yrest"
     },
     "yrestRelationTypes": {
       "match": "(?<=:\\s*)(many2one|one2many|one2one|many2many)(?=\\s*$)",

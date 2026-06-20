@@ -32,13 +32,19 @@ Hover any yrest reserved key, relation type, alias or cardinality to see inline 
 
 Covered tokens: `_rel`, `_routes`, `_schema`, all `_rel` keys (`_type`, `_target`, `_foreignKey`, `_otherKey`, `_primaryKey`, `_through`, `_car-direct`, `_car-inverse`, `_nested`), all `_routes` keys (`_method`, `_path`, `_handler`, `_response`, `_scenarios`, `_otherwise`, `_delay`, `_error`, `_errorBody`), response block keys (`_status`, `_body`, `_headers`), `_when`, relation types and aliases (`many2one`, `m2o`, `one2one`, `o2o`, `many2many`, `m2m`), cardinalities and `+nested`.
 
-Hover also works inside TypeScript/JavaScript tagged template literals:
+Hover and diagnostics also work inside TypeScript/JavaScript tagged template literals:
 
 ```ts
 const db = yrest`
+  users:
+    - { id: 1, name: Ana }
+
+  posts:
+    - { id: 1, title: Hello, userId: 1 }
+
   _rel:
     posts:
-      userId: users   # hover works here too
+      userId: users   # hover, autocomplete and validation work here
 `;
 ```
 
@@ -95,6 +101,12 @@ For any other filename, add to your VS Code settings:
 ### Shorthand relation (level 1)
 
 ```yaml
+users:
+  - { id: 1, name: Ana }
+
+posts:
+  - { id: 1, title: Hello world, userId: 1 }
+
 _rel:
   posts:
     userId: users
@@ -103,6 +115,18 @@ _rel:
 ### Compact DSL (level 2 — type + cardinality)
 
 ```yaml
+users:
+  - { id: 1, name: Ana }
+
+tags:
+  - { id: 1, name: typescript }
+
+post_tags:
+  - { postId: 1, tagId: 1 }
+
+posts:
+  - { id: 1, title: Hello world, userId: 1 }
+
 _rel:
   posts:
     userId: "m2o:users[1..1->0..n]"
@@ -112,6 +136,12 @@ _rel:
 ### Verbose form (full control)
 
 ```yaml
+bookings:
+  - { id: 1, date: "2026-01-15" }
+
+payments:
+  - { id: 1, bookingId: 1, amount: 150 }
+
 _rel:
   payments:
     bookingId:
@@ -169,7 +199,7 @@ No additional runtime dependencies are needed. The extension bundles its own `ya
 | **v0.1**           | Language support, syntax highlighting, diagnostics                                                           |
 | **v0.2** (current) | Hover docs for all reserved keys; autocomplete with 10 contexts; full `_routes` key support                  |
 | **v0.3**           | Smart validation via `@yrest/core`; quick fixes (convert shorthand → verbose, add missing `_type`/`_target`) |
-| **v0.4**           | `_schema` support; diagnostics for `_routes` entries (`_method` valid value, `_path` format)                 |
+| **v0.4**           | `_schema` support; `.yrest` as a standalone file extension (full YAML grammar embedded)                      |
 | **v1.0**           | Language Server migration; go-to-collection, rename refactoring, cross-file analysis                         |
 
 ---

@@ -46,6 +46,32 @@ export function diagnosticAtToken(
 }
 
 /**
+ * Like `diagnosticAtToken` but restricts the token search to a character range `[from, to)`.
+ *
+ * Used when validating YAML content extracted from a tagged template literal so the
+ * diagnostic points inside the template, not the first occurrence in the whole file.
+ */
+export function diagnosticAtTokenInRange(
+  doc: vscode.TextDocument,
+  text: string,
+  token: string,
+  message: string,
+  from: number,
+  to: number,
+  severity: Severity = "error",
+): vscode.Diagnostic {
+  const idx = text.indexOf(token, from);
+  const withinBounds = idx !== -1 && idx < to;
+  const start = withinBounds ? idx : from;
+  const end = withinBounds ? idx + token.length : from + 1;
+  return new vscode.Diagnostic(
+    new vscode.Range(doc.positionAt(start), doc.positionAt(end)),
+    message,
+    SEVERITY_MAP[severity],
+  );
+}
+
+/**
  * Creates a `Diagnostic` at an explicit character offset range within the document.
  *
  * Primarily used for YAML parse errors, which provide exact positions via `err.pos`.

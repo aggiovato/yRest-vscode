@@ -15,11 +15,11 @@ const fixture = yrest`
         _nested: false
 
   _routes:
-    - method: GET
-      path: /orders/:id/summary
-      response:
-        status: 200
-        body:
+    - _method: GET
+      _path: /orders/:id/summary
+      _response:
+        _status: 200
+        _body:
           orderId: "{{params.id}}"
           fetchedAt: "{{now}}"
           ref: "{{uuid}}"

@@ -7,6 +7,21 @@ This project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ---
 
+## [0.2.2] — 2026-06-20
+
+### Added
+
+- **Tagged template literal validation:** diagnostics (YAML parse errors, `_rel` and `_routes` semantic rules) now run inside `yrest\`...\`` tagged template literals in TypeScript and JavaScript files; positions are mapped back to the correct location in the source file via `diagnosticAtTokenInRange`
+- **Grammar — condition dot-notation:** `_body.field`, `_query.x`, `_params.id`, `_headers.x` prefixes inside `_when` condition blocks are now highlighted as reserved keywords — pattern uses no lookbehind so it works both in `.yrest.yml` files and inside TS/JS `yrest\`...\`` template literals
+
+### Fixed
+
+- **Grammar — list item keys:** reserved keys after `- ` (YAML list item dash) were not highlighted (`_method`, `_when`, `_response`… inside `_routes` list entries) — fixed grammar lookbehind in both `yrest.tmLanguage.json` and `yrest-yaml-injection.json` to accept `(?:-\s*)?` before the key name
+- **Validation scoping:** `diagnosticAtToken` was always highlighting the first occurrence of a token in the full document — errors from `_rel` now search from the `_rel:` offset and errors from `_routes` from `_routes:`, preventing false positives on user fields with the same name (e.g. a field named `status` inside `_schema` no longer gets flagged for a bare-key error inside `_routes`)
+- **Example files:** `ecommerce.yrest.yml`, `test-setup.ts` and `test-setup.js` updated to use the `_`-prefixed key convention throughout (`_method`, `_path`, `_when`, `_response`, `_status`, `_body`) and made self-contained with all referenced collections defined
+
+---
+
 ## [0.2.1] — 2026-06-19
 
 ### Added

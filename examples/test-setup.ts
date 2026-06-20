@@ -52,25 +52,25 @@ const authFixture = yrest`
       roles: "m2m:roles@user_roles(userId,roleId)[0..n->0..n]"
 
   _routes:
-    - method: POST
-      path: /auth/login
-      scenarios:
-        - when:
-            body.email: admin@test.com
-          response:
-            status: 200
-            body:
+    - _method: POST
+      _path: /auth/login
+      _scenarios:
+        - _when:
+            _body.email: admin@test.com
+          _response:
+            _status: 200
+            _body:
               token: "{{uuid}}"
               role: admin
-      otherwise:
-        status: 401
-        body: { error: Unauthorized }
+      _otherwise:
+        _status: 401
+        _body: { error: Unauthorized }
 
-    - method: GET
-      path: /users/:id/profile
-      response:
-        status: 200
-        body:
+    - _method: GET
+      _path: /users/:id/profile
+      _response:
+        _status: 200
+        _body:
           userId: "{{params.id}}"
           fetchedAt: "{{now}}"
 
