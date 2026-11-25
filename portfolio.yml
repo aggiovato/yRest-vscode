@@ -1,0 +1,9 @@
+# What aggiovato/portfolio shows about the yRest VS Code extension, sent on every tagged release
+# (publish.yml → portfolio). Only facts that do not depend on the language; the version and its day
+# are added by the workflow.
+# Contract: https://github.com/aggiovato/portfolio/blob/main/.github/workflows/project-release.yml
+slug: yrest-vscode # the case study it updates
+status: active # active | completed | prototype | paused
+links:
+  code: https://github.com/aggiovato/yRest-vscode
+  install: https://marketplace.visualstudio.com/items?itemName=aggiovato.yrest

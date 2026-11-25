@@ -82,3 +82,15 @@ jobs:
           body_path: /tmp/release-notes.md
           prerelease: ${{ needs.publish.outputs.pre_release == 'true' }}
           make_latest: ${{ needs.publish.outputs.pre_release == 'false' }}
+
+  # Once the version is on the Marketplace, the portfolio's case study shows it (portfolio.yml has
+  # the rest). Only for tags: a manual publish has no version tag. 0.x versions are Marketplace
+  # pre-releases but they are what people install, so they count.
+  portfolio:
+    needs: publish
+    if: github.event_name == 'push'
+    uses: aggiovato/portfolio/.github/workflows/project-release.yml@main
+    with:
+      version: ${{ github.ref_name }}
+    secrets:
+      PORTFOLIO_TOKEN: ${{ secrets.PORTFOLIO_TOKEN }}
